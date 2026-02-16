@@ -3,8 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 :root {
   --bg-deep: #0B1120;
   --accent-glow: radial-gradient(circle at center, rgba(56, 189, 248, 0.08) 0%, rgba(99, 102, 241, 0.05) 35%, rgba(15, 23, 42, 0) 70%);
@@ -14,7 +12,22 @@ body {
   background-color: var(--bg-deep);
   color: #E2E8F0;
   margin: 0;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* CSS-only grain texture - no external image, faster load */
+.bg-grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
 .glow-orb {
@@ -65,21 +78,56 @@ body {
   outline: none;
 }
 
-.bg-grain {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuBExdfsumHSjDItWvylf6vEyOrf1a27sRBeG194KKgWjHpLd3pStATYZUlG7CIku_Pobhzg-ZwGomeEm_vT8kZ3n-BvcRxX4DSFbaCC-9puqJpOlHoBYr_A8sEbsglzpE6H2WTwq5otIrz42DvIA4628ApFF4pEzzSZIxxqTiVJ2Wb5t1Gsc0sRRqL7gm1oac6z_voR0XeV2-hlOVSR_6YDKa33W5FtG5sPsIDhyD9wAuCwy9INc6gPUOcpSrxW-IzVw-DD0C6tQzw);
-  opacity: 0.07;
-  pointer-events: none;
-  z-index: 1;
-}
-
 .separator-line {
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.2), transparent);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.5s ease-out forwards;
+}
+
+.animate-shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+.animation-delay-100 { animation-delay: 100ms; }
+.animation-delay-200 { animation-delay: 200ms; }
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-up,
+  .animate-shake {
+    animation: none;
+  }
 }
 
 
