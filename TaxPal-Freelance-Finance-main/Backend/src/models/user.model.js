@@ -15,6 +15,13 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:[true,"Name is required for creating an account"]
     },
+    country: {
+        type: String,
+        default: "US",
+        trim: true,
+        uppercase: true,
+        enum: { values: ["US", "IN", "GB", "CA"], message: "Country must be US, IN, GB, or CA" },
+    },
     password:{
         type:String,
         required:[true, "Password is required for creating an account"],
