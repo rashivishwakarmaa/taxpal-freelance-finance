@@ -6,7 +6,7 @@ import { API_BASE } from '../config/api';
 function SignUp() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [signupInfo, setSignupInfo] = useState({ name: '', email: '', password: '' });
+  const [signupInfo, setSignupInfo] = useState({ name: '', email: '', password: '', country: 'US' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -81,6 +81,15 @@ function SignUp() {
             <div className="space-y-1.5">
               <label className="text-[13px] font-medium text-slate-400 ml-0.5" htmlFor="password">Password</label>
               <input className="w-full px-4 py-3 custom-input rounded-lg text-[14px] placeholder-slate-600 focus:ring-0" id="password" name="password" placeholder="Min. 8 characters" required minLength={6} type="password" value={signupInfo.password} onChange={handleChange} />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-[13px] font-medium text-slate-400 ml-0.5" htmlFor="country">Tax country</label>
+              <select className="w-full px-4 py-3 custom-input rounded-lg text-[14px] focus:ring-0" id="country" name="country" value={signupInfo.country} onChange={handleChange}>
+                <option value="US">United States</option>
+                <option value="IN">India</option>
+                <option value="GB">United Kingdom</option>
+                <option value="CA">Canada</option>
+              </select>
             </div>
             <div className="pt-2">
               <button className="w-full shimmer-btn font-bold py-3.5 rounded-lg text-[14px] text-slate-900 shadow-lg tracking-tight hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed transition-transform" type="submit" disabled={loading}>
