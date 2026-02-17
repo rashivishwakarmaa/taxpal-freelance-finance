@@ -1,13 +1,39 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../components/DashboardLayout';
+import { api } from '../utils/api';
 
-const stats = [
-  { label: 'Total Income', value: '—', sub: 'Connect data to see' },
-  { label: 'Total Expenses', value: '—', sub: 'Connect data to see' },
-  { label: 'Estimated Tax', value: '—', sub: 'Connect data to see' },
-];
+function formatCurrency(n) {
+  if (n == null || isNaN(n)) return '—';
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+}
 
 export default function Dashboard() {
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api('GET', '/dashboard/stats')
+      .then((data) => setStats(data.stats))
+      .catch(() => setStats(null))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const taxSub = stats?.taxBreakdown?.countryName
+    ? `${stats.taxBreakdown.countryName} rules`
+    : 'Based on income & expenses';
+  const statCards = stats
+    ? [
+        { label: 'Total Income', value: formatCurrency(stats.totalIncome), sub: 'This year' },
+        { label: 'Total Expenses', value: formatCurrency(stats.totalExpenses), sub: 'This year' },
+        { label: 'Estimated Tax', value: formatCurrency(stats.estimatedTax), sub: taxSub },
+      ]
+    : [
+        { label: 'Total Income', value: loading ? '...' : '—', sub: loading ? 'Loading...' : 'Add income to see' },
+        { label: 'Total Expenses', value: loading ? '...' : '—', sub: loading ? 'Loading...' : 'Add expenses to see' },
+        { label: 'Estimated Tax', value: loading ? '...' : '—', sub: loading ? 'Loading...' : 'Add data to see' },
+      ];
+
   return (
     <DashboardLayout>
       <div className="space-y-8">
@@ -17,7 +43,7 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-          {stats.map((s) => (
+          {statCards.map((s) => (
             <div
               key={s.label}
               className="glass-card rounded-2xl p-6 animate-fade-up"
