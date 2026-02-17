@@ -17,7 +17,7 @@ const features = [
       </svg>
     ),
     title: 'Tax Estimation',
-    desc: 'Get smart tax estimates so you're never surprised at year-end.',
+    desc: "Get smart tax estimates so you're never surprised at year-end.",
   },
   {
     icon: (
