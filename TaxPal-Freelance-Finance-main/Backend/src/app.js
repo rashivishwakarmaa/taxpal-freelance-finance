@@ -1,20 +1,32 @@
-const express = require("express")
-const cookieParser = require("cookie-parser")
-const authRouter = require("./routes/auth.routes")
-
+const express = require("express");
+const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const app = express()
 
+const authRouter = require("./routes/auth.routes");
+const incomeRouter = require("./routes/income.routes");
+const expenseRouter = require("./routes/expense.routes");
+const dashboardRouter = require("./routes/dashboard.routes");
+const taxRouter = require("./routes/tax.routes");
 
-app.use(express.json())
-app.use(cookieParser())
+const app = express();
 
-
-app.use("/api/auth", authRouter)
-
-
-app.use(cors({ origin: 'http://localhost:5173', credentials: true })); // Adjust port if needed
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
 
+app.use("/api/auth", authRouter);
+app.use("/api/income", incomeRouter);
+app.use("/api/expenses", expenseRouter);
+app.use("/api/dashboard", dashboardRouter);
+app.use("/api/tax", taxRouter);
 
-module.exports = app 
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", message: "TaxPal API is running" });
+});
+
+module.exports = app;
